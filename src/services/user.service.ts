@@ -1,5 +1,5 @@
 import type { IUserRepository } from "../repositories/user.repository";
-import type { User } from "../generated/client";
+import type { User } from "../generated";
 
 export interface IUserService {
   getAllUsers(): Promise<{ users: User[]; total: number }>;

@@ -1,4 +1,4 @@
-// import type { Character } from "../generated/client";
+// import type { Character } from "../generated";
 // import { getPrisma } from "../prisma";
 
 // const prisma = getPrisma()

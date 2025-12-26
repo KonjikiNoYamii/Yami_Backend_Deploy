@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient, OrderItems } from "../generated/client";
+import type { Prisma, PrismaClient, OrderItems } from "../generated";
 
 export interface IOrderItemRepository {
   findAll(

@@ -1,4 +1,4 @@
-import type { Category, Prisma, Product } from "../generated/client";
+import type { Category, Prisma, Product } from "../generated";
 import type { IProductRepository } from "../repositories/product.repository";
 
 export interface FindAllParams {
