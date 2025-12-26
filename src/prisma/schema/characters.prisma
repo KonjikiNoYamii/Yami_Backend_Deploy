@@ -1,0 +1,12 @@
+model Character {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+
+  elementId   Int
+  rarityId    Int
+
+  element     Element  @relation(fields: [elementId], references: [id])
+  rarity      Rarity   @relation(fields: [rarityId], references: [id])
+  deletedAt DateTime?
+}
