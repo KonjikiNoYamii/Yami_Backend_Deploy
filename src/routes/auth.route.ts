@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prismaInstance from "../prisma";
+import prismaInstance from "../database";
 
 import { AuthRepository } from "../repositories/auth.repository";
 import { AuthService } from "../services/auth.service";

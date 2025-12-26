@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prismaInstance from "../prisma";
+import prismaInstance from "../database";
 import { upload } from "../middleware/upload.middleware";
 import { validate } from "../utils/validator";
 import {

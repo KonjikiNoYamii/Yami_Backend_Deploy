@@ -1,5 +1,5 @@
 import { Router } from "express";
-import prismaInstance from "../prisma";
+import prismaInstance from "../database";
 
 import { UserRepository } from "../repositories/user.repository";
 import { UserService } from "../services/user.service";
@@ -54,7 +54,7 @@ router.get("/", userController.getAll);
  *       200:
  *         description: Statistik user berhasil diambil
  */
-router.get("/stats", userController.getStats)
+router.get("/stats", userController.getStats);
 
 /**
  * @swagger

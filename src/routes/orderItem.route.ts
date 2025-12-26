@@ -1,15 +1,15 @@
-import { Router } from "express"
+import { Router } from "express";
 
-import { OrderItemService } from "../services/orderItem.service"
-import { OrderItemRepository } from "../repositories/orderItem.repository"
-import { OrderItemController } from "../controller/orderItem.controller"
-import prismaInstance from "../prisma"
+import { OrderItemService } from "../services/orderItem.service";
+import { OrderItemRepository } from "../repositories/orderItem.repository";
+import { OrderItemController } from "../controller/orderItem.controller";
+import prismaInstance from "../database";
 
-const router = Router()
+const router = Router();
 
-const orderItemRepo = new OrderItemRepository(prismaInstance)
-const orderItemService = new OrderItemService(orderItemRepo)
-const orderItemController = new OrderItemController(orderItemService)
+const orderItemRepo = new OrderItemRepository(prismaInstance);
+const orderItemService = new OrderItemService(orderItemRepo);
+const orderItemController = new OrderItemController(orderItemService);
 
 /**
  * @swagger
@@ -60,7 +60,7 @@ const orderItemController = new OrderItemController(orderItemService)
  *       200:
  *         description: Order items berhasil diambil
  */
-router.get("/", orderItemController.getAll)
+router.get("/", orderItemController.getAll);
 
 /**
  * @swagger
@@ -82,7 +82,7 @@ router.get("/", orderItemController.getAll)
  *       404:
  *         description: Order item tidak ditemukan
  */
-router.get("/:id", orderItemController.getById)
+router.get("/:id", orderItemController.getById);
 
 /**
  * @swagger
@@ -115,7 +115,7 @@ router.get("/:id", orderItemController.getById)
  *       201:
  *         description: Order item berhasil dibuat
  */
-router.post("/", orderItemController.create)
+router.post("/", orderItemController.create);
 
 /**
  * @swagger
@@ -147,7 +147,7 @@ router.post("/", orderItemController.create)
  *       404:
  *         description: Order item tidak ditemukan
  */
-router.put("/:id", orderItemController.update)
+router.put("/:id", orderItemController.update);
 
 /**
  * @swagger
@@ -169,6 +169,6 @@ router.put("/:id", orderItemController.update)
  *       404:
  *         description: Order item tidak ditemukan
  */
-router.delete("/:id", orderItemController.delete)
+router.delete("/:id", orderItemController.delete);
 
-export default router
+export default router;

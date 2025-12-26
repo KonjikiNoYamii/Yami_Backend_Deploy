@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { OrderService } from "../services/order.service";
 import { OrderRepository } from "../repositories/order.repository";
-import prismaInstance from "../prisma";
+import prismaInstance from "../database";
 import { OrderController } from "../controller/order.controller";
 import { authenticate } from "../middleware/auth.middleware";
 import { asyncHandler } from "../utils/async.hander";
@@ -59,11 +59,7 @@ const orderController = new OrderController(orderService);
  *       401:
  *         description: Unauthorized
  */
-router.post(
-  "/checkout",
-  authenticate,
-  asyncHandler(orderController.checkout)
-);
+router.post("/checkout", authenticate, asyncHandler(orderController.checkout));
 
 /**
  * @swagger
@@ -116,11 +112,8 @@ router.post(
  *       401:
  *         description: Unauthorized
  */
-router.get(
-  "/",
-  authenticate,
-  asyncHandler(orderController.getAll)
-);/**
+router.get("/", authenticate, asyncHandler(orderController.getAll));
+/**
  * @swagger
  * /orders/stats:
  *   get:
@@ -132,10 +125,7 @@ router.get(
  *         description: Statistik order berhasil diambil
  */
 
-router.get(
-  "/stats",
-  orderController.getStats
-)
+router.get("/stats", orderController.getStats);
 
 /**
  * @swagger
@@ -161,11 +151,7 @@ router.get(
  *       401:
  *         description: Unauthorized
  */
-router.get(
-  "/:id",
-  authenticate,
-  asyncHandler(orderController.getById)
-);
+router.get("/:id", authenticate, asyncHandler(orderController.getById));
 
 /**
  * @swagger
@@ -191,10 +177,6 @@ router.get(
  *       401:
  *         description: Unauthorized
  */
-router.delete(
-  "/:id",
-  authenticate,
-  asyncHandler(orderController.deleteOrder)
-);
+router.delete("/:id", authenticate, asyncHandler(orderController.deleteOrder));
 
 export default router;

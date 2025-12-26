@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { authenticate } from "../middleware/auth.middleware";
 import { upload } from "../middleware/upload.middleware";
-import prismaInstance from "../prisma";
+import prismaInstance from "../database";
 import { ProductService } from "../services/product.service";
 import { ProductController } from "../controller/product.controller";
 import { ProductRepository } from "../repositories/product.repository";
@@ -136,12 +136,7 @@ router.get("/:id", controller.getById);
  *       201:
  *         description: Produk berhasil dibuat
  */
-router.post(
-  "/",
-  authenticate,
-  upload.single("image"),
-  controller.create
-);
+router.post("/", authenticate, upload.single("image"), controller.create);
 
 /**
  * @swagger
@@ -178,8 +173,7 @@ router.post(
  *       200:
  *         description: Produk berhasil diupdate
  */
-router.put("/:id",  authenticate,
-  upload.single("image"), controller.update);
+router.put("/:id", authenticate, upload.single("image"), controller.update);
 
 /**
  * @swagger
