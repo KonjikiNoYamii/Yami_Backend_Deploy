@@ -1,4 +1,4 @@
-import type { PrismaClient, Prisma, Category } from "../generated";
+import type { PrismaClient, Prisma, Category } from "../../dist/generated";
 
 export interface ICategoryRepository {
   findAll(
@@ -72,5 +72,4 @@ export class CategoryRepository implements ICategoryRepository {
       data: { deletedAt: new Date() },
     });
   }
-
 }

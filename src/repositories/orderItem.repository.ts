@@ -1,4 +1,4 @@
-import type { Prisma, PrismaClient, OrderItems } from "../generated";
+import type { Prisma, PrismaClient, OrderItems } from "../../dist/generated";
 
 export interface IOrderItemRepository {
   findAll(
@@ -22,7 +22,12 @@ export interface IOrderItemRepository {
 export class OrderItemRepository implements IOrderItemRepository {
   constructor(private prisma: PrismaClient) {}
 
-  findAll(skip: number, take: number, where: Prisma.OrderItemsWhereInput, orderBy: Prisma.OrderItemsOrderByWithRelationInput) {
+  findAll(
+    skip: number,
+    take: number,
+    where: Prisma.OrderItemsWhereInput,
+    orderBy: Prisma.OrderItemsOrderByWithRelationInput
+  ) {
     return this.prisma.orderItems.findMany({
       skip,
       take,

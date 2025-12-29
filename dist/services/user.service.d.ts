@@ -1,4 +1,4 @@
-import type { User } from "../generated";
+import type { User } from "../../dist/generated/index.js";
 import type { IUserRepository } from "../repositories/user.repository.js";
 export interface IUserService {
     getAllUsers(): Promise<{
@@ -32,7 +32,7 @@ export declare class UserService implements IUserService {
     updateUser(id: string, data: Partial<User>): Promise<User>;
     deleteUser(id: string): Promise<User>;
     exec(): Promise<{
-        overview: import("../generated").Prisma.GetUserAggregateType<{
+        overview: import("../../dist/generated/index.js").Prisma.GetUserAggregateType<{
             _count: {
                 id: true;
             };

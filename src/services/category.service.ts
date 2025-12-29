@@ -1,4 +1,4 @@
-import type { Prisma, Category } from "../generated";
+import type { Prisma, Category } from "../../dist/generated";
 import type { ICategoryRepository } from "../repositories/category.repository";
 
 export interface FindAllCategoryParams {
@@ -29,9 +29,7 @@ export interface ICategoryService {
 export class CategoryService implements ICategoryService {
   constructor(private categoryRepo: ICategoryRepository) {}
 
-  async getAll(
-    params: FindAllCategoryParams
-  ): Promise<CategoryListResponse> {
+  async getAll(params: FindAllCategoryParams): Promise<CategoryListResponse> {
     const { page, limit, search, sortBy, sortOrder } = params;
 
     const skip = (page - 1) * limit;
@@ -47,10 +45,9 @@ export class CategoryService implements ICategoryService {
       };
     }
 
-    const orderBy: Prisma.CategoryOrderByWithRelationInput =
-      sortBy
-        ? { [sortBy]: sortOrder ?? "desc" }
-        : { id: "desc" };
+    const orderBy: Prisma.CategoryOrderByWithRelationInput = sortBy
+      ? { [sortBy]: sortOrder ?? "desc" }
+      : { id: "desc" };
 
     const categories = await this.categoryRepo.findAll(
       skip,

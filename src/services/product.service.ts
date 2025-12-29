@@ -1,4 +1,4 @@
-import type { Category, Prisma, Product } from "../generated";
+import type { Category, Prisma, Product } from "../../dist/generated";
 import type { IProductRepository } from "../repositories/product.repository";
 
 export interface FindAllParams {
@@ -30,16 +30,19 @@ export interface IProductService {
     categoryId: number;
     image: string;
   }): Promise<Product>;
-  updateProduct(id: string, data: {
-    name?: string;
-    description?: string;
-    price?: number;
-    stock?: number;
-    categoryId?: number;
-    image?: string;
-  }): Promise<Product>;
+  updateProduct(
+    id: string,
+    data: {
+      name?: string;
+      description?: string;
+      price?: number;
+      stock?: number;
+      categoryId?: number;
+      image?: string;
+    }
+  ): Promise<Product>;
   deleteProduct(id: string): Promise<Product>;
-  exec():Promise<{overview:any,byCategory:any}>
+  exec(): Promise<{ overview: any; byCategory: any }>;
 }
 
 export class ProductService implements IProductService {
@@ -129,24 +132,24 @@ export class ProductService implements IProductService {
   updateProduct = async (
     id: string,
     data: {
-    name?: string,
-    description?: string,
-    price?: number,
-    stock?: number,
-    categoryId?: number,
-    image?: string,
-  }
+      name?: string;
+      description?: string;
+      price?: number;
+      stock?: number;
+      categoryId?: number;
+      image?: string;
+    }
   ): Promise<Product> => {
     const numid = parseInt(id);
 
     const products = {
-      name:String(data.name),
-      description:String(data.description),
-      price:Number(data.price),
-      stock:Number(data.stock),
-      categoryId:Number(data.categoryId),
-      image:String(data.image)
-    }
+      name: String(data.name),
+      description: String(data.description),
+      price: Number(data.price),
+      stock: Number(data.stock),
+      categoryId: Number(data.categoryId),
+      image: String(data.image),
+    };
     return await this.productRepo.update(numid, products);
   };
 
@@ -156,13 +159,13 @@ export class ProductService implements IProductService {
     return await this.productRepo.softDelete(numid);
   };
 
-  exec = async() =>{
-    const stats = await this.productRepo.getStats()
-    const categoryStats = await this.productRepo.getProductByCategoryStats()
+  exec = async () => {
+    const stats = await this.productRepo.getStats();
+    const categoryStats = await this.productRepo.getProductByCategoryStats();
 
-    return{
-      overview:stats,
-      byCategory:categoryStats
-    }
-  }
+    return {
+      overview: stats,
+      byCategory: categoryStats,
+    };
+  };
 }

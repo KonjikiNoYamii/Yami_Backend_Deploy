@@ -1,5 +1,5 @@
-import type { Prisma, PrismaClient, Order } from "../generated";
-import type { Decimal } from "../generated/runtime/client";
+import type { Prisma, PrismaClient, Order } from "../../dist/generated";
+import type { Decimal } from "../../dist/generated/runtime/client";
 
 export interface IOrderRepository {
   findProductsForCheckout(
@@ -37,25 +37,33 @@ export interface IOrderRepository {
 
   softDelete(id: number): Promise<Order>;
 
-  getStats():Promise<Prisma.GetOrderAggregateType<{
-    _count:{id:true},
-      _sum:{total:true},
-      _min:{total:true},
-      _max:{total:true}
-  }>>;
+  getStats(): Promise<
+    Prisma.GetOrderAggregateType<{
+      _count: { id: true };
+      _sum: { total: true };
+      _min: { total: true };
+      _max: { total: true };
+    }>
+  >;
 
-  getOrderStatsByUser():Promise<(Prisma.PickEnumerable<Prisma.OrderGroupByOutputType, "userId"[] & {
-    _sum:{total:Decimal | null}
-    _count:{id:number}
-
-  }>[])>
-
+  getOrderStatsByUser(): Promise<
+    Prisma.PickEnumerable<
+      Prisma.OrderGroupByOutputType,
+      "userId"[] & {
+        _sum: { total: Decimal | null };
+        _count: { id: number };
+      }
+    >[]
+  >;
 }
 
 export class OrderRepository implements IOrderRepository {
   constructor(private prisma: PrismaClient) {}
 
-  async findProductsForCheckout(productIds: number[], tx: Prisma.TransactionClient) {
+  async findProductsForCheckout(
+    productIds: number[],
+    tx: Prisma.TransactionClient
+  ) {
     return tx.product.findMany({
       where: {
         deletedAt: null,
@@ -69,7 +77,11 @@ export class OrderRepository implements IOrderRepository {
     });
   }
 
-  async decrementStock(productId: number, qty: number, tx: Prisma.TransactionClient) {
+  async decrementStock(
+    productId: number,
+    qty: number,
+    tx: Prisma.TransactionClient
+  ) {
     await tx.product.update({
       where: { id: productId },
       data: {
@@ -78,7 +90,10 @@ export class OrderRepository implements IOrderRepository {
     });
   }
 
-  async createOrderWithItems(data: Prisma.OrderCreateInput, tx: Prisma.TransactionClient) {
+  async createOrderWithItems(
+    data: Prisma.OrderCreateInput,
+    tx: Prisma.TransactionClient
+  ) {
     return tx.order.create({
       data,
       include: {
@@ -90,7 +105,12 @@ export class OrderRepository implements IOrderRepository {
     });
   }
 
-  async findAll(skip: number, take: number, where: Prisma.OrderWhereInput, orderBy: Prisma.OrderOrderByWithRelationInput) {
+  async findAll(
+    skip: number,
+    take: number,
+    where: Prisma.OrderWhereInput,
+    orderBy: Prisma.OrderOrderByWithRelationInput
+  ) {
     return this.prisma.order.findMany({
       skip,
       take,
@@ -123,22 +143,21 @@ export class OrderRepository implements IOrderRepository {
       data: { deletedAt: new Date() },
     });
   }
-  
-  async getStats(){
+
+  async getStats() {
     return this.prisma.order.aggregate({
-      _count:{id:true},
-      _sum:{total:true},
-      _min:{total:true},
-      _max:{total:true}
-    })
+      _count: { id: true },
+      _sum: { total: true },
+      _min: { total: true },
+      _max: { total: true },
+    });
   }
 
-  async getOrderStatsByUser(){
+  async getOrderStatsByUser() {
     return this.prisma.order.groupBy({
-      by:['userId'],
-      _count:{id:true},
-      _sum:{total:true}
-    })
+      by: ["userId"],
+      _count: { id: true },
+      _sum: { total: true },
+    });
   }
-
 }

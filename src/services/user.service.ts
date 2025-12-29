@@ -1,4 +1,4 @@
-import type { User } from "../generated";
+import type { User } from "../../dist/generated";
 import type { IUserRepository } from "../repositories/user.repository";
 
 export interface IUserService {
@@ -11,7 +11,7 @@ export interface IUserService {
   ): Promise<User>;
   updateUser(id: string, data: Partial<User>): Promise<User>;
   deleteUser(id: string): Promise<User>;
-  exec():Promise<{overview:any}>
+  exec(): Promise<{ overview: any }>;
 }
 
 export class UserService implements IUserService {
@@ -35,10 +35,7 @@ export class UserService implements IUserService {
     email: string,
     password_hash: string
   ): Promise<User> {
-    const exist = await this.userRepo.findByUsernameOrEmail(
-      username,
-      email
-    );
+    const exist = await this.userRepo.findByUsernameOrEmail(username, email);
 
     if (exist) {
       throw new Error("Username atau email sudah digunakan");
@@ -59,11 +56,11 @@ export class UserService implements IUserService {
     return this.userRepo.softDelete(Number(id));
   }
 
-  async exec(){
-    const overview = await this.userRepo.getStats()
+  async exec() {
+    const overview = await this.userRepo.getStats();
 
-    return{
-      overview
-    }
+    return {
+      overview,
+    };
   }
 }

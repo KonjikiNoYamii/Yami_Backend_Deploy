@@ -1,137 +1,146 @@
 import type { Decimal } from "@prisma/client/runtime/client";
-import type { Category, Prisma, PrismaClient, Product } from "../generated";
+import type {
+  Category,
+  Prisma,
+  PrismaClient,
+  Product,
+} from "../../dist/generated";
 
 export interface IProductRepository {
-    list(
-        skip: number,
-        take: number,
-        where: Prisma.ProductWhereInput,
-        orderBy: Prisma.ProductOrderByWithRelationInput
-    ): Promise<Product[]>;
-    countAll(where: Prisma.ProductWhereInput): Promise<number>;
-    findById(id: number): Promise<Category | null & Product | null>;
-    create(data: Prisma.ProductCreateInput): Promise<Product>;
-    update(id: number, data: Prisma.ProductUpdateInput): Promise<Product>;
-    softDelete(id: number): Promise<Product>;
-    findComplex(categoryName:string, maxPrice: number):Promise<Product[]>;
-    getStats():Promise<Prisma.GetProductAggregateType<{
-        _count: {
-            id: true;
-        };
-        _avg: {
-            price: true;
-        };
-        _sum: {
-            stock: true;
-        };
-        _min: {
-            price: true;
-        };
-        _max: {
-            price: true;
-        };
-    }>>
-    getProductByCategoryStats(): Promise<(Prisma.PickEnumerable<Prisma.ProductGroupByOutputType, "categoryId"[]> & {
-        _avg: {
-            price: Decimal | null;
-        };
-        _count: {
-            id: number;
-        };
-    })[]>
+  list(
+    skip: number,
+    take: number,
+    where: Prisma.ProductWhereInput,
+    orderBy: Prisma.ProductOrderByWithRelationInput
+  ): Promise<Product[]>;
+  countAll(where: Prisma.ProductWhereInput): Promise<number>;
+  findById(id: number): Promise<Category | (null & Product) | null>;
+  create(data: Prisma.ProductCreateInput): Promise<Product>;
+  update(id: number, data: Prisma.ProductUpdateInput): Promise<Product>;
+  softDelete(id: number): Promise<Product>;
+  findComplex(categoryName: string, maxPrice: number): Promise<Product[]>;
+  getStats(): Promise<
+    Prisma.GetProductAggregateType<{
+      _count: {
+        id: true;
+      };
+      _avg: {
+        price: true;
+      };
+      _sum: {
+        stock: true;
+      };
+      _min: {
+        price: true;
+      };
+      _max: {
+        price: true;
+      };
+    }>
+  >;
+  getProductByCategoryStats(): Promise<
+    (Prisma.PickEnumerable<Prisma.ProductGroupByOutputType, "categoryId"[]> & {
+      _avg: {
+        price: Decimal | null;
+      };
+      _count: {
+        id: number;
+      };
+    })[]
+  >;
 }
 
 export class ProductRepository implements IProductRepository {
-    constructor(private prisma: PrismaClient) { }
+  constructor(private prisma: PrismaClient) {}
 
-    async list(
-        skip: number,
-        take: number,
-        where: Prisma.ProductWhereInput,
-        orderBy: Prisma.ProductOrderByWithRelationInput
-    ): Promise<Product[]> {
-        return await this.prisma.product.findMany({
-            skip,
-            take,
-            where,
-            orderBy,
-            include: { category: true }
-        })
-    }
+  async list(
+    skip: number,
+    take: number,
+    where: Prisma.ProductWhereInput,
+    orderBy: Prisma.ProductOrderByWithRelationInput
+  ): Promise<Product[]> {
+    return await this.prisma.product.findMany({
+      skip,
+      take,
+      where,
+      orderBy,
+      include: { category: true },
+    });
+  }
 
-    async countAll(where: Prisma.ProductWhereInput): Promise<number> {
-        return await this.prisma.product.count({ where })
-    }
+  async countAll(where: Prisma.ProductWhereInput): Promise<number> {
+    return await this.prisma.product.count({ where });
+  }
 
-    async findById(id: number): Promise<Category | null & Product | null> {
-        return await this.prisma.product.findUnique({
-            where: {
-                id,
-                deletedAt: null,
-            },
-            include: {
-                category: true
-            }
-        })
-    }
+  async findById(id: number): Promise<Category | (null & Product) | null> {
+    return await this.prisma.product.findUnique({
+      where: {
+        id,
+        deletedAt: null,
+      },
+      include: {
+        category: true,
+      },
+    });
+  }
 
-    async create(data: Prisma.ProductCreateInput): Promise<Product> {
-        return await this.prisma.product.create({ data })
-    }
+  async create(data: Prisma.ProductCreateInput): Promise<Product> {
+    return await this.prisma.product.create({ data });
+  }
 
-    async update(id: number, data: Prisma.ProductUpdateInput): Promise<Product> {
-        return await this.prisma.product.update({
-            where: {
-                id,
-                deletedAt: null,
-            },
-            data
-        })
-    }
+  async update(id: number, data: Prisma.ProductUpdateInput): Promise<Product> {
+    return await this.prisma.product.update({
+      where: {
+        id,
+        deletedAt: null,
+      },
+      data,
+    });
+  }
 
-    async softDelete(id: number): Promise<Product> {
-        return await this.prisma.product.update({
-            where: {
-                id,
-                deletedAt: null,
-            },
-            data: {
-                deletedAt: new Date()
-            }
-        })
-    }
+  async softDelete(id: number): Promise<Product> {
+    return await this.prisma.product.update({
+      where: {
+        id,
+        deletedAt: null,
+      },
+      data: {
+        deletedAt: new Date(),
+      },
+    });
+  }
 
-    async findComplex(categoryName:string, maxPrice: number){
-        return await this.prisma.product.findMany({
-            where:{
-                OR:[
-                    {
-                        AND:[
-                            {category:{name:categoryName}},
-                            {price:{lt:maxPrice}}
-                        ]
-                    },
-                    {category:{name:'Aksesoris'}}
-                ]
-            }
-        })
-    }
+  async findComplex(categoryName: string, maxPrice: number) {
+    return await this.prisma.product.findMany({
+      where: {
+        OR: [
+          {
+            AND: [
+              { category: { name: categoryName } },
+              { price: { lt: maxPrice } },
+            ],
+          },
+          { category: { name: "Aksesoris" } },
+        ],
+      },
+    });
+  }
 
-    async getStats(){
-        return await this.prisma.product.aggregate({
-            _count:{id:true},
-            _avg:{price:true},
-            _sum:{stock:true},
-            _min:{price:true},
-            _max:{price:true}
-        })
-    }
+  async getStats() {
+    return await this.prisma.product.aggregate({
+      _count: { id: true },
+      _avg: { price: true },
+      _sum: { stock: true },
+      _min: { price: true },
+      _max: { price: true },
+    });
+  }
 
-    async getProductByCategoryStats(){
-        return await this.prisma.product.groupBy({
-            by:['categoryId'],
-            _count:{id:true},
-            _avg:{price:true}
-        })
-    }
+  async getProductByCategoryStats() {
+    return await this.prisma.product.groupBy({
+      by: ["categoryId"],
+      _count: { id: true },
+      _avg: { price: true },
+    });
+  }
 }

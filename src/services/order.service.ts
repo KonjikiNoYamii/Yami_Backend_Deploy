@@ -1,4 +1,4 @@
-import type { PrismaClient, Order, Prisma } from "../generated";
+import type { PrismaClient, Order, Prisma } from "../../dist/generated";
 import type { IOrderRepository } from "../repositories/order.repository";
 
 export interface CreateOrderInput {
@@ -31,7 +31,6 @@ export class OrderService {
   constructor(
     private prisma: PrismaClient,
     private orderRepo: IOrderRepository
-
   ) {}
 
   // ✅ CHECKOUT YANG BENAR
@@ -39,14 +38,17 @@ export class OrderService {
     return this.prisma.$transaction(async (tx) => {
       let total = 0;
 
-      const productIds = data.orderItem.map(i => i.productId);
+      const productIds = data.orderItem.map((i) => i.productId);
 
-      const products = await this.orderRepo.findProductsForCheckout(productIds, tx);
+      const products = await this.orderRepo.findProductsForCheckout(
+        productIds,
+        tx
+      );
 
       const orderItems: Prisma.OrderItemsCreateWithoutOrderInput[] = [];
 
       for (const item of data.orderItem) {
-        const product = products.find(p => p.id === item.productId);
+        const product = products.find((p) => p.id === item.productId);
 
         if (!product) {
           throw new Error(`Product ${item.productId} tidak ditemukan`);
@@ -59,10 +61,10 @@ export class OrderService {
         total += Number(product.price) * item.quantity;
 
         orderItems.push({
-          product:{
-            connect:{
-              id:product.id
-            }
+          product: {
+            connect: {
+              id: product.id,
+            },
           },
           quantity: item.quantity,
           priceAtTime: product.price,
@@ -84,7 +86,9 @@ export class OrderService {
     });
   };
 
-  getAllOrders = async (params: FindAllOrderParams): Promise<OrderListResponse> => {
+  getAllOrders = async (
+    params: FindAllOrderParams
+  ): Promise<OrderListResponse> => {
     const { page, limit, search, sortBy, sortOrder } = params;
 
     const skip = (page - 1) * limit;
@@ -126,14 +130,13 @@ export class OrderService {
     return this.orderRepo.softDelete(parseInt(id));
   };
 
-  exec = async () =>{
-    const stats = await this.orderRepo.getStats()
-    const userStats = await this.orderRepo.getOrderStatsByUser()
+  exec = async () => {
+    const stats = await this.orderRepo.getStats();
+    const userStats = await this.orderRepo.getOrderStatsByUser();
 
     return {
-      overview:stats,
-      byUser:userStats
-    }
-
-  }
+      overview: stats,
+      byUser: userStats,
+    };
+  };
 }
