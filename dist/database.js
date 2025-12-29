@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import config from "./utils/env.js";
-import { PrismaClient } from "./generated/client.js";
+import { PrismaClient } from "./generated/client";
 import { PrismaPg } from "@prisma/adapter-pg";
 let prisma;
 const getPrisma = () => {
